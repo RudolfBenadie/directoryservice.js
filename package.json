@@ -10,6 +10,9 @@
   "keywords": [
     "directory"
   ],
+  "repository": {
+    "url": "https://github.com/RudolfBenadie/directoryservice.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
