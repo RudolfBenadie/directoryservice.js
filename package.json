@@ -1,0 +1,17 @@
+{
+  "name": "directoryservice",
+  "version": "1.0.0",
+  "description": "JS Directory Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "directory"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tortoise": "^1.0.1"
+  }
+}
