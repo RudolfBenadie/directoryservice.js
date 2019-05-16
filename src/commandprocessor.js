@@ -6,8 +6,9 @@ class CommandProcessor {
 
     ChangeCompanyLegalName(aggregate, message) {
         console.log(aggregate);
-        console.log(message.Message + ": " + message.Data.LegalName);
+        console.log(message.Method + ": " + message.Data.LegalName);
         //Validate
+        aggregate[message.Method](message);
     }
 }
 
@@ -21,7 +22,7 @@ module.exports = function Processor() {
         var aggregate = this.repo.Get(entity, aggregateId);
 
         var cp = new CommandProcessor(this.repo);
-        if (cp[message.Message]) cp[message.Message](aggregate, message);
+        if (cp[message.Method]) cp[message.Method](aggregate, message);
     }
 }
 
@@ -30,7 +31,7 @@ var m =
 {
     "Id":"1",
     "Entity":"Company",
-    "Message":"ChangeCompanyLegalName",
+    "Method":"ChangeCompanyLegalName",
     "Version":"1",
     "Data":{
         "LegalName":"Company Legal Name"
