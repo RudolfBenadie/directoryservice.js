@@ -10,5 +10,6 @@ module.exports = function Repository() {
         var eventStream = this.EventStore.ReadStream(streamName);
         var aggregate;
         if (domain[type]) aggregate = domain[type]();
+        return aggregate;
     }
 }
