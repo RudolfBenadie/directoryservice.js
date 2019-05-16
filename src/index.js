@@ -1,5 +1,5 @@
 var Tortoise = require('tortoise');
-var tortoise = new Tortoise('amqp://jnb-pc1');
+var tortoise = new Tortoise('amqp://jnbrbenadie-pc');
 
 var EventStore = require('./inmemoryeventstore');
 var imes = new EventStore();
@@ -20,3 +20,19 @@ tortoise
         CommandProcessor.Process(msg);
         ack(); // or nack()
     });
+
+/*
+var m =
+{
+    "Id":"1",
+    "Entity":"Company",
+    "Message":"CompanyLegalNameChanged",
+    "Version":"1",
+    "Data":{
+        "LegalName":"Company Legal Name"
+    },
+    "MetaData":{
+        "LegalName":""
+    }
+}
+*/
