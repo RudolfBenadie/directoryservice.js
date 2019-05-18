@@ -6,12 +6,11 @@ class CommandProcessor {
 
     ChangeCompanyLegalName(aggregate, message) {
         console.log(aggregate);
-        console.log(message.Method + ": " + message.Data.LegalName);
-        //Validate
+        console.log(message.Method + ": ");
+        console.log(message.Data);
         aggregate[message.Method](message);
     }
 }
-
 
 module.exports = function Processor() {
     this.repo = null;
@@ -20,9 +19,10 @@ module.exports = function Processor() {
         var aggregateId = message.Id;
         var entity = message.Entity;
         var aggregate = this.repo.Get(entity, aggregateId);
-
         var cp = new CommandProcessor(this.repo);
         if (cp[message.Method]) cp[message.Method](aggregate, message);
+        this.repo.Save(entity, aggregateId, aggregate.EventStream);
+        aggregate.ClearEvents();
     }
 }
 
@@ -34,7 +34,7 @@ var m =
     "Method":"ChangeCompanyLegalName",
     "Version":"1",
     "Data":{
-        "LegalName":"Company Legal Name"
+        "LegalName":"First Legal Name"
     },
     "MetaData":{
         "LegalName":""

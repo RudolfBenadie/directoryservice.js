@@ -1,5 +1,5 @@
 var Tortoise = require('tortoise');
-var tortoise = new Tortoise('amqp://jnbrbenadie-pc');
+var tortoise = new Tortoise('amqp://localhost');
 
 var EventStore = require('./inmemoryeventstore');
 var imes = new EventStore();
@@ -13,7 +13,7 @@ var CommandProcessor = new Processor();
 CommandProcessor.repo = repo;
 
 tortoise
-    .queue('iLoan')
+    .queue('microservice-queue')
     .prefetch(1)
     .json()  // Decodes message from JSON
     .subscribe(function (msg, ack, nack) {
@@ -26,10 +26,10 @@ var m =
 {
     "Id":"1",
     "Entity":"Company",
-    "Message":"CompanyLegalNameChanged",
+    "Method":"ChangeCompanyLegalName",
     "Version":"1",
     "Data":{
-        "LegalName":"Company Legal Name"
+        "LegalName":"First Legal Name"
     },
     "MetaData":{
         "LegalName":""

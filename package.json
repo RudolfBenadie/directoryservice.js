@@ -18,6 +18,7 @@
   "dependencies": {
     "assert": "^2.0.0",
     "cucumber": "^5.1.0",
+    "slonik": "^16.19.5",
     "tortoise": "^1.0.1"
   }
 }
