@@ -1,14 +1,9 @@
-import { createPool } from 'slonik';
-
 module.exports = function EventStore() {
-
-    var connectionPool;
 
     this.Events = {};
     this.Connected = false;
 
     this.Connect = function () {
-        connectionPool = createPool('postgres://postgres:P455word@jnb-pc1:5432/Microservice');
         this.Connected = true;
     }
 
