@@ -1,7 +1,7 @@
 var Tortoise = require('tortoise');
 var tortoise = new Tortoise('amqp://localhost');
 
-var EventStore = require('./inmemoryeventstore');
+var EventStore = require('./pgeventstore');
 var imes = new EventStore();
 
 var Repository = require('./repository');

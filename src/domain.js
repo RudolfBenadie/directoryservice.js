@@ -7,7 +7,7 @@ class Aggregate {
 
     ApplyAll() {
         for (let i = 0; i < this.EventStream.length; i++) {
-            var item = this.EventStream[i];
+            var item = this.EventStream[i].data;
             this.Apply(item);
         }
     }

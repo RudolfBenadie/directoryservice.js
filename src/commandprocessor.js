@@ -1,7 +1,6 @@
 class CommandProcessor {
 
-    constructor(repo) {
-        this.repo = repo
+    constructor() {
     }
 
     ChangeCompanyLegalName(aggregate, message) {
@@ -18,11 +17,19 @@ module.exports = function Processor() {
     this.Process = function (message) {
         var aggregateId = message.Id;
         var entity = message.Entity;
-        var aggregate = this.repo.Get(entity, aggregateId);
-        var cp = new CommandProcessor(this.repo);
-        if (cp[message.Method]) cp[message.Method](aggregate, message);
-        this.repo.Save(entity, aggregateId, aggregate.EventStream);
-        aggregate.ClearEvents();
+        var aggregatePromise = this.repo.Get(entity, aggregateId);
+        aggregatePromise
+            .then(data => {
+                var aggregate = data;
+                var cp = new CommandProcessor();
+                if (cp[message.Method]) cp[message.Method](aggregate, message);
+                var savePromise = this.repo.Save(entity, aggregateId, aggregate.EventStream);
+                savePromise
+                    .then(res => {
+                        aggregate.ClearEvents();
+                        console.log(res);
+                    })
+            });
     }
 }
 
