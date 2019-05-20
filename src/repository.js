@@ -1,16 +1,30 @@
 var domain = require("./domain")
-domain = new domain();
 
 module.exports = function Repository() {
+    var entityDefinitions = (new domain()).classes;
     this.EventStore = null;
 
-    this.Get = function (type, id) {
-        var streamName = type + id;
-        if (!this.EventStore) throw new Exception("The event store must be assigned.");
-        var eventStream = this.EventStore.ReadStream(streamName);
+    this.Get = function Get(type, id) {
         var aggregate;
-        if (domain[type]) aggregate = domain[type]();
-        aggregate.EventStream.push(eventStream);
-        return aggregate;
+        if (entityDefinitions[type]) aggregate = new entityDefinitions[type](id);
+        if (!this.EventStore) throw new Exception("The event store must be assigned.");
+        var streamName = type + id;
+        var eventStreamPromise = this.EventStore.ReadStream(streamName);
+        return eventStreamPromise
+            .then(data => {
+                var eventStream = data;
+                if (eventStream && eventStream.length > 0) {
+                    aggregate.EventStream.push(...eventStream);
+                    aggregate.ApplyAll();
+                    aggregate.ClearEvents();
+                }
+                return aggregate;
+            })
+    }
+
+    this.Save = function Save(type, id, events) {
+        var streamName = type + id;
+        var result = this.EventStore.AppendStream(streamName, events);
+        return result;
     }
 }

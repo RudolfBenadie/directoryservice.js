@@ -17,7 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "assert": "^2.0.0",
+    "bluebird": "^3.5.4",
     "cucumber": "^5.1.0",
+    "pg-promise": "^8.7.2",
     "tortoise": "^1.0.1"
   }
 }

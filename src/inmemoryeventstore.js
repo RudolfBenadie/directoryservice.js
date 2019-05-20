@@ -14,7 +14,7 @@ module.exports = function EventStore() {
     this.AppendStream = function (streamName, events) {
         if (!streamName) throw new Exception("The stream name must have a value");
         if (!this.Events[streamName]) this.Events[streamName] = new Array();
-        this.Events[streamName].push(events);
+        this.Events[streamName].push(...events);
     }
 
     this.ReadStream = function (streamName) {

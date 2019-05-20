@@ -7,27 +7,28 @@ class Aggregate {
 
     ApplyAll() {
         for (let i = 0; i < this.EventStream.length; i++) {
-            var item = this.EventStream[i];
-            Apply(item);
+            var item = this.EventStream[i].data;
+            this.Apply(item);
         }
     }
 
     Apply(event) {
         if (this[event.Method])
-            this[event.Method](evet.Data);
+            this[event.Method](event.Data);
     }
 
     GetEvents() {
-        return EventStream;
+        return this.EventStreamEventStream;
     }
 
     ClearEvents() {
-        EventStream.length = 0;
+        this.EventStream.length = 0;
     }
 }
 
 class Company extends Aggregate {
     constructor(id) {
+        super();
         this.Id = id;
         this.LegalName = "";
         this.ShortName = "";
@@ -35,9 +36,11 @@ class Company extends Aggregate {
 
     ChangeCompanyLegalName(message) {
         try {
+            //Validate
+
             var event = message;
             message.Method = "CompanyLegalNameChanged";
-            message.MetaData = { "LegalName": this, LegalName };
+            message.MetaData = { "LegalName": this.LegalName };
 
             this.LegalName = message.Data.LegalName;
             this.EventStream.push(event);
@@ -48,7 +51,7 @@ class Company extends Aggregate {
     }
 
     CompanyLegalNameChanged(event) {
-        this.LegalName = event.Data.LegalName;
+        this.LegalName = event.LegalName;
     }
 }
 
