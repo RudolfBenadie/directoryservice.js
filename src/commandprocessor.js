@@ -4,9 +4,6 @@ class CommandProcessor {
     }
 
     ChangeCompanyLegalName(aggregate, message) {
-        console.log(aggregate);
-        console.log(message.Method + ": ");
-        console.log(message.Data);
         aggregate[message.Method](message);
     }
 }
@@ -27,8 +24,7 @@ module.exports = function Processor() {
                 savePromise
                     .then(res => {
                         aggregate.ClearEvents();
-                        console.log(res);
-                    })
+                    });
             });
     }
 }

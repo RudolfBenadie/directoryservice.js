@@ -12,7 +12,7 @@ module.exports = function Repository() {
         var eventStreamPromise = this.EventStore.ReadStream(streamName);
         return eventStreamPromise
             .then(data => {
-                var eventStream = data;
+                var eventStream = data[0].company_read_stream;
                 if (eventStream && eventStream.length > 0) {
                     aggregate.EventStream.push(...eventStream);
                     aggregate.ApplyAll();
