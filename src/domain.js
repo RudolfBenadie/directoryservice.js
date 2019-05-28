@@ -7,14 +7,14 @@ class Aggregate {
 
     ApplyAll() {
         for (let i = 0; i < this.EventStream.length; i++) {
-            var item = this.EventStream[i].data;
+            var item = this.EventStream[i];
             this.Apply(item);
         }
     }
 
     Apply(event) {
         if (this[event.Method])
-            this[event.Method](event.Data);
+            this[event.Method](event);
     }
 
     GetEvents() {
@@ -51,7 +51,7 @@ class Company extends Aggregate {
     }
 
     CompanyLegalNameChanged(event) {
-        this.LegalName = event.LegalName;
+        this.LegalName = event.Data.LegalName;
     }
 }
 

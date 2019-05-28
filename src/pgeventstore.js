@@ -13,8 +13,8 @@ const pgp = require('pg-promise')(initOptions);
 // Database connection details;
 const cn = {
     host: 'localhost', // 'localhost' is the default;
-    port: 5432, // 5432 is the default;
-    database: 'Microservice',
+    port: 4321, // 5432 is the default;
+    database: 'directory_service',
     user: 'postgres',
     password: 'P455word'
 };
@@ -42,7 +42,9 @@ module.exports = function EventStore() {
         if (!events) { return; }
         return db.tx(t => {
             const queries = events.map(e => {
-                return t.one('INSERT INTO public.company_event_store (stream_name, data) VALUES($1, $2) RETURNING id', [streamName, e], u => u.id);
+                var jsonb = new Array();
+                jsonb.push(e);
+                return t.one('SELECT data.company_append_stream($1::varchar, $2::jsonb[])', [streamName, jsonb]);
             })
             return t.batch(queries);
         })
@@ -50,7 +52,7 @@ module.exports = function EventStore() {
 
     this.ReadStream = function (streamName) {
         if (!streamName) throw new Exception("The stream name must have a value");
-        return db.any('SELECT * FROM company_event_store WHERE stream_name = ($1)', [streamName]);
+        return db.any('SELECT data.company_read_stream ($1::varchar)', [streamName]);
     }
 
     this.StreamExists = function (streamName) {
