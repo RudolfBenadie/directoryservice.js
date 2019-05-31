@@ -1,4 +1,12 @@
 var domain = require("./domain")
+var Tortoise = require('tortoise');
+var tortoise = new Tortoise('amqp://localhost');
+
+function publishMessage(payload) {
+    tortoise
+        .queue('event-queue')
+        .publish(payload)
+}
 
 module.exports = function Repository() {
     var entityDefinitions = (new domain()).classes;
@@ -11,8 +19,7 @@ module.exports = function Repository() {
         var streamName = type + id;
         var eventStreamPromise = this.EventStore.ReadStream(streamName);
         return eventStreamPromise
-            .then(data => {
-                var eventStream = data[0].company_read_stream;
+            .then(eventStream => {
                 if (eventStream && eventStream.length > 0) {
                     aggregate.EventStream.push(...eventStream);
                     aggregate.ApplyAll();
@@ -24,7 +31,18 @@ module.exports = function Repository() {
 
     this.Save = function Save(type, id, events) {
         var streamName = type + id;
-        var result = this.EventStore.AppendStream(streamName, events);
-        return result;
+        var eventStreamPromise = this.EventStore.AppendStream(streamName, events);
+        return eventStreamPromise
+            .then(result => {
+                if (result == "") {
+                    events.map(e => {
+                        publishMessage(e);
+                    })
+                    return "success"
+                }
+            })
+            .catch(err => {
+                throw err;
+            })
     }
 }

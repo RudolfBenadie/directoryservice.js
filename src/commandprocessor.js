@@ -15,32 +15,23 @@ module.exports = function Processor() {
         var aggregateId = message.Id;
         var entity = message.Entity;
         var aggregatePromise = this.repo.Get(entity, aggregateId);
-        aggregatePromise
+        return aggregatePromise
             .then(data => {
                 var aggregate = data;
                 var cp = new CommandProcessor();
-                if (cp[message.Method]) cp[message.Method](aggregate, message);
-                var savePromise = this.repo.Save(entity, aggregateId, aggregate.EventStream);
-                savePromise
-                    .then(res => {
-                        aggregate.ClearEvents();
-                    });
+                if (cp[message.Method]) {
+                    cp[message.Method](aggregate, message);
+                    var savePromise = this.repo.Save(entity, aggregateId, aggregate.EventStream);
+                    return savePromise
+                        .then(res => {
+                            console.log(res)
+                            aggregate.ClearEvents();
+                            return "success";
+                        });
+                }
+                else {
+                    return "fail";
+                }
             });
     }
 }
-
-/*
-var m =
-{
-    "Id":"1",
-    "Entity":"Company",
-    "Method":"ChangeCompanyLegalName",
-    "Version":"1",
-    "Data":{
-        "LegalName":"First Legal Name"
-    },
-    "MetaData":{
-        "LegalName":""
-    }
-}
-*/

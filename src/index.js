@@ -13,12 +13,20 @@ var CommandProcessor = new Processor();
 CommandProcessor.repo = repo;
 
 tortoise
-    .queue('microservice-queue')
+    .queue('command-queue')
     .prefetch(1)
     .json()  // Decodes message from JSON
     .subscribe(function (msg, ack, nack) {
-        CommandProcessor.Process(msg);
-        ack(); // or nack()
+        var processPromise = CommandProcessor.Process(msg);
+        processPromise
+            .then(result => {
+                if (result == "success") {
+                    ack(); // or nack()
+                }
+                else {
+                    nack();
+                }
+            })
     });
 
 /*
