@@ -18,7 +18,7 @@ class Aggregate {
     }
 
     GetEvents() {
-        return this.EventStreamEventStream;
+        return this.EventStream;
     }
 
     ClearEvents() {
