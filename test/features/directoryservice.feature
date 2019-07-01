@@ -4,7 +4,7 @@ Feature: Directory Service
 
     Scenario: Assign a legal name to a company without a legal name
         Given   A company without a legal name
-        When    The legal name is assigned
-        Then    The company legal name is updated
-        And     A CompanyLegalNameChanged event is added to the event stream
+        When    The legal name is assigned using the command '{"Id":"1","Entity":"Company","Method":"ChangeCompanyLegalName","Version":"0","Data":{"LegalName":"First Legal Name"}}'
+        Then    The company legal name is updated to "First Legal Name"
+        And     A CompanyLegalNameChanged event '{"Id":"1","Entity":"Company","Method":"CompanyLegalNameChanged","Version":"1","Data":{"LegalName":"First Legal Name"}}' is added to the event stream
 

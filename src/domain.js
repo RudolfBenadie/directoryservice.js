@@ -38,8 +38,8 @@ class Company extends Aggregate {
         try {
             //Validate
             var event = message;
-            message.Method = "CompanyLegalNameChanged";
-            message.MetaData = { "LegalName": this.LegalName };
+            event.Method = "CompanyLegalNameChanged";
+            event.MetaData = { "LegalName": this.LegalName };
             this.Apply(event);
             this.EventStream.push(event);
         }
