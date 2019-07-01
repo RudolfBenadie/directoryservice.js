@@ -21,7 +21,11 @@
     "bluebird": "^3.5.4",
     "cucumber": "^5.1.0",
     "gulp": "^4.0.2",
+    "help": "^3.0.2",
     "pg-promise": "^8.7.2",
     "tortoise": "^1.0.1"
+  },
+  "devDependencies": {
+    "cypress": "^3.3.1"
   }
 }
