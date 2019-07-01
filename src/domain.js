@@ -18,7 +18,7 @@ class Aggregate {
     }
 
     GetEvents() {
-        return this.EventStreamEventStream;
+        return this.EventStream;
     }
 
     ClearEvents() {
@@ -37,12 +37,10 @@ class Company extends Aggregate {
     ChangeCompanyLegalName(message) {
         try {
             //Validate
-
             var event = message;
-            message.Method = "CompanyLegalNameChanged";
-            message.MetaData = { "LegalName": this.LegalName };
-
-            this.LegalName = message.Data.LegalName;
+            event.Method = "CompanyLegalNameChanged";
+            event.MetaData = { "LegalName": this.LegalName };
+            this.Apply(event);
             this.EventStream.push(event);
         }
         catch (error) {

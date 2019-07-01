@@ -1,10 +1,10 @@
 const promise = require('bluebird'); // or any other Promise/A+ compatible library;
 
 const initOptions = {
-    promiseLib: promise, // overriding the default (ES6 Promise);
-    query(e) {
-        console.log('QUERY:', e.query);
-    }
+    promiseLib: promise // overriding the default (ES6 Promise);
+    // ,query(e) {
+    //     console.log('QUERY:', e.query);
+    // }
 };
 
 const pgp = require('pg-promise')(initOptions);
@@ -40,19 +40,27 @@ module.exports = function EventStore() {
     this.AppendStream = function (streamName, events) {
         if (!streamName) throw new Exception("The stream name must have a value");
         if (!events) { return; }
-        return db.tx(t => {
-            const queries = events.map(e => {
-                var jsonb = new Array();
-                jsonb.push(e);
-                return t.one('SELECT data.company_append_stream($1::varchar, $2::jsonb[])', [streamName, jsonb]);
+        var jsonb = new Array();
+        jsonb.push(...events);
+        return db.one('SELECT data.company_append_stream($1::varchar, $2::jsonb[])', [streamName, jsonb])
+            .then(result => {
+                return result.company_append_stream;
             })
-            return t.batch(queries);
-        })
+            .catch(err => {
+                throw err;
+            })
     }
 
     this.ReadStream = function (streamName) {
         if (!streamName) throw new Exception("The stream name must have a value");
-        return db.any('SELECT data.company_read_stream ($1::varchar)', [streamName]);
+        var eventStream = db.any('SELECT data.company_read_stream ($1::varchar)', [streamName]);
+        return eventStream
+            .then(data => {
+                return data[0].company_read_stream;
+            })
+            .catch(err => {
+                throw err;
+            })
     }
 
     this.StreamExists = function (streamName) {
