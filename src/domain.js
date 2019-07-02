@@ -48,8 +48,25 @@ class Company extends Aggregate {
         }
     }
 
+    ChangeCompanyShortName(message) {
+        try {
+            var event = message;
+            event.Method = "CompanyShortNameChanged";
+            event.MetaData = { "ShortName": this.LegalName };
+            this.Apply(event);
+            this.EventStream.push(event);
+        }
+        catch (error) {
+
+        }
+    }
+
     CompanyLegalNameChanged(event) {
         this.LegalName = event.Data.LegalName;
+    }
+
+    CompanyShortNameChanged(event) {
+        this.ShortName = event.Data.ShortName;
     }
 }
 

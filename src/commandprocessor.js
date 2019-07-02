@@ -1,12 +1,17 @@
-class CommandProcessor {
-
-    constructor() {
-    }
-
-    ChangeCompanyLegalName(aggregate, message) {
-        aggregate[message.Method](message);
+/*
+{
+    "Id":"1",
+    "Entity":"Company",
+    "Method":"ChangeCompanyLegalName",
+    "Version":"1",
+    "Data":{
+        "LegalName":"First Legal Name"
+    },
+    "MetaData":{
+        "LegalName":""
     }
 }
+*/
 
 module.exports = function Processor() {
     this.repo = null;
@@ -18,9 +23,8 @@ module.exports = function Processor() {
         return aggregatePromise
             .then(data => {
                 var aggregate = data;
-                var cp = new CommandProcessor();
-                if (cp[message.Method]) {
-                    cp[message.Method](aggregate, message);
+                if (aggregate[message.Method]) {
+                    aggregate[message.Method](message);
                     var savePromise = this.repo.Save(entity, aggregateId, aggregate.EventStream);
                     return savePromise
                         .then(res => {
