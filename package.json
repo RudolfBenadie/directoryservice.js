@@ -23,7 +23,7 @@
     "gulp": "^4.0.2",
     "help": "^3.0.2",
     "pg-promise": "^8.7.2",
-    "set-value": "^3.0.1",
+    "set-value": "^4.0.1",
     "tortoise": "^1.0.1"
   },
   "devDependencies": {
